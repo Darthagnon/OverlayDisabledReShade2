@@ -45,3 +45,22 @@ See the [ReShade Forum](https://reshade.me/forum) and [Discord](https://discord.
 
 ReShade is licensed under the terms of the [BSD 3-clause license](LICENSE.md).\
 Some source code files are dual-licensed and are also available under the terms of the MIT license, when stated as such at the top of those files.
+
+## Patching
+
+If you want to patch the latest version using github action, fork this repo, find the tag for the desired version in crosire/reshade, merge it, assign a version tag (v*..), push it, and github action will build it.
+
+**GitHub Actions > enable workflows**
+```
+tag=v6.5.0
+git clone https://github.com/ovitus/OverlayDisabledReShade
+cd OverlayDisabledReShade
+git remote add upstream https://github.com/crosire/reshade.git
+git fetch upstream --tags
+git merge $tag
+git checkout --ours .github/workflows/build.yml
+git checkout --theirs source/runtime_gui.cpp
+sed -i 's/show_splash = true/show_splash = false/g' source/runtime_gui.cpp
+git tag $tag-patched
+git push origin $tag-patched
+```
